@@ -1,11 +1,13 @@
-class Shape:
-    def __init__(self):
-        self.__color = "white"
+class HotWaterException(Exception):
+    def __init__(self, msg):
+        self.msg = msg
 
-    def getColor(self):
-        return self.__color
+class ColdWaterException(Exception):
+    def __init__(self, msg):
+        self.msg = msg
 
-    def setColor(self, color):
-        self.__color = color    
+print(__name__)        
+if __name__ == '__main__':
+    print("lllll!!!")
 
 

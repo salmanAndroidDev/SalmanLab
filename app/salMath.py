@@ -1,23 +1,19 @@
-class Salary:
-    def __init__(self, hourly_income, work_per_week):
-        self.__hourly_income = hourly_income
-        self.__work_per_week = work_per_week
+import math
 
-    def get_monthly_income(self):
-        return self.__hourly_income * (self.__work_per_week * 4)    
+n = int(input())
+dic = {}
+for i in range(n):
+    room = input()
+    if(room in dic):
+        dic[room][0] += 1
+    else:
+        dic[room] = [1,0]
 
-class Employee:
-    def __init__(self, name, sal):
-        self.__name = name
-        self.__income_info = sal
+    people_in_this_room = dic[room][0]
+    difference = people_in_this_room - 2
+    
+    if difference < 0:
+        difference = 0
 
-    def print_info(self):
-        info = """
-        name: {}
-        monthly Income: {}""".format(self.__name, self.__income_info.get_monthly_income())
-        print(info)
-
-
-sal = Salary(60, 80)
-emp = Employee("Salman", sal)
-emp.print_info()
+    dic[room][1] +=int(math.factorial(people_in_this_room)/ (math.factorial(2) * math.factorial(difference)))
+    print(dic[room][1])

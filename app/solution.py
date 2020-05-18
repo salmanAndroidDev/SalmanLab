@@ -1,49 +1,34 @@
-def getBMI(height, weight):
-    return weight / ((height/100) ** 2)
-    
+def correctify_word(word):
 
-def process(path):
-    # path = """179 73.8 ATHLETE
-    #     179 71.8 ATHLETE
-    #     172 71.3 ATHLETE
-    #     151 85.0 NORMAL
-    #     192 91.8 NORMAL"""
+    for character in word:
+          if not character.isalnum():
+              word = word.replace(character,'')
+    return word
 
-    athletes = []
-    athletes_average_bmi = 0.000
-    normal_people = []
-    normal_average_bmi = 0.000
 
-    counter_for_athletes = 0
-    counter_for_normals = 0
+def encode(text):
 
-    text = []
-    text.extend(path.split('\n'))
-    
-    for word in text:
-        height, weight, mode = word.split()
-        height = int(height)
-        weight = float(weight)
-        BMI = getBMI(height, weight)
+    words =text.replace('\n',' ').split()
 
-        if mode == 'ATHLETE':
-            counter_for_athletes += 1
-            athletes.append((height, weight, BMI))
-            athletes_average_bmi += BMI  
+    dic_words = {}
+    numbers = []
+    counter = 1
+
+    for word in words:
+        selected_word = word
+
+        if not word.isalnum():
+            selected_word = correctify_word(word)
+        
+        if selected_word == '':
+            continue
+
+        if not selected_word in dic_words:
+            dic_words[selected_word] = counter
+            numbers.append(counter)        
+            counter += 1
+        
         else:
-            counter_for_normals += 1
-            normal_people.append((height, weight, BMI))
-            normal_average_bmi += BMI
-
-    if counter_for_athletes > 0:
-        athletes_average_bmi /= counter_for_athletes
-
-    if counter_for_normals > 0:
-        normal_average_bmi /= counter_for_normals    
-
-    athletes = "athletes = {}".format(athletes)
-    athletes_average_bmi = 'athletes_average_bmi = {}'.format(athletes_average_bmi)
-    normal_people = "normalPeople = {}".format(normal_people)    
-    normal_average_bmi = 'normal_average_bmi = {}'.format(normal_average_bmi)
+            numbers.append(dic_words.get(selected_word))
     
-    return athletes , athletes_average_bmi , normal_people, normal_average_bmi
+    return dic_words, numbers
