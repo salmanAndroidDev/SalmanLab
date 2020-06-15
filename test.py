@@ -1,14 +1,30 @@
 import re
+import pyperclip as clip
 
-message = """my main purpose is automating stuff i wanna use
- something like automail, autoprocess most of my stuff and autocompile to comile easily
- beyond that i'm crazy about as also my mail is salmanAndroidDev@yahoo.com also sbmlai25@gmail.com
- by the way no no no  i would like there male is female and also afdefeafefdedfemadle and amale to autotweet and autopost my last mail is salmanAndB@outlook.com before
- i had salmanplusb@gmail.com and also salmanplusb@yahoo.com. u can check +-*/+-*/+-*/+-*/+-*/n
- my phone number is 915753-3678 by the way salman would you like to have dinner?"""
-
-regx_object = re.compile(r'(\d\d\d\d\d-)?(\d\d\d-)?\d\d\d-\d\d\d\d')
-another_rej = re.compile(r'(\d){3,}-(\d){4}')
-mo = another_rej.search(message)
-
-print(mo)
+result = re.compile(r'''(
+ ((\d{3})|(\(\d{3}\)))? # first seperator
+ (\s|-) # space or dash
+ \d{3}  # 3 digit
+ -       #seperator
+ \d{4}       #last 4 digits
+ (((ext(\.)?\s)|x)
+ (\d{2,5}))?)      #extensions optional
+''', re.VERBOSE)
+email_re = re.compile(r'''
+[a-zA-Z0-9_.+]+ #sub domain
+@               # atsign
+[a-zA-Z0-9_.+]+ # extensio
+'''
+, re.VERBOSE)
+# name_re = r'\w*\s\w*'
+# number_re = re.compile(r'(\d{3}-\d{3}-\d{4})')
+# email_re = re.compile(r'\w*@\w*.\w*')
+# info_re = re.compile(r'\w*\w*, \d{3}-\d{3}-\d{4}, \w*@\w*.\w*')
+# results = info_re.findall(number_pattern, re.VERB
+total = result.findall(clip.paste())
+str = ''
+total_numbers = []
+for i in total:
+    total_numbers.append(i[0])
+str = '\n'.join(total_numbers)
+clip.copy(str)
