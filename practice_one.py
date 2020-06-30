@@ -1,13 +1,39 @@
-import numpy as np
+import re
 
-# Write a function that takes as input two lists Y, P,
-# and returns the float corresponding to their cross-entropy.
-def cross_entropy(Y, P):
-    Y = np.float_(Y)
-    P = np.float_(P)
+variables = {}
 
-    return -np.sum(Y * np.log(P) + (1 - Y) * np.log( 1 - P))
+def is_function(command):
+    fun_pattern = re.compile(r'\w+\(\w+,\w+\)')
+    result = fun_pattern.search(command)
 
-Y = np.array([1.0,1.0,0.0])
-P = np.array([0.8, 0.7, 0.1])
-print(cross_entropy(Y,P))
+    if result == None:
+        return False
+    return True    
+
+def is_variable(command):
+    variable_pattern = re.compile(r'\w+[^\(\)]')
+    result = variable_pattern.search(command)
+    if result == None or result.group() != command:
+        return False
+    return True
+
+def variable_is_defined(var):
+    if var in variables: return True
+    else: return False
+
+
+
+command = input()
+
+chunck_command = command.split()
+var = chunck_command[0]
+
+# print if variale is called and is already defined
+if len(chunck_command) == 1:
+    if variable_is_defined(var):
+        print(variables.get(var))
+    else:
+        print('variable not found')
+
+
+
