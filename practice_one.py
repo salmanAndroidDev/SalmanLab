@@ -4,6 +4,7 @@ variables = dict()
 functions = ('add', 'sub', 'mul', 'div', 'pow', 'gcd', 'log')
 
 def do_operation(variable, operation, val1, val2):
+   
     if(operation == 'add'):
         variables[variable] = val1 + val2
     elif(operation == 'sub'):
@@ -15,7 +16,7 @@ def do_operation(variable, operation, val1, val2):
     elif(operation == 'pow'):    
         variables[variable] = val1 ** val2
     elif(operation == 'gcd'):    
-        variables[variable] =  math.gcd(val1, val2)
+        variables[variable] =  math.gcd(int(val1), int(val2))
     elif(operation == 'log'):    
         variables[variable] = math.log(val1, val2)
 
@@ -45,8 +46,9 @@ def variable_is_defined(var):
     else: return False
 
 def is_valid_number(var):
+    if var.isdigit(): return True
     variable_pattern = re.compile(r'(\d+(\.)?\d+)')
-    result = variable_pattern.search(command)
+    result = variable_pattern.search(var)
     
     if result != None and result.group() == var :
         return True
@@ -60,20 +62,22 @@ def starts_with_number(var):
 
 while True:
     command = input()
+
+    if command == 'end':break
+
     chunck_command = command.split(':=')
     var = chunck_command[0].strip()
 
         # print if variale is called and is already defined
     if len(chunck_command) == 1:
         if variable_is_defined(var):
-            print(variables.get(var))
+            print('%.3f' % variables.get(var))
         else:
             print('variable not found')
     
     elif is_function(chunck_command[1].strip()):
         function = chunck_command[1].strip()
         func_name, x , y = get_function_values(function)        
-        
         if func_name in functions:
             
             # fixing value for x
@@ -96,10 +100,9 @@ while True:
                 print('val is not a number')
 
             elif variable_is_defined(y):
-                y = variables.get(x)
+                y = variables.get(y)
             else:
                 print('variable error')
-            
 
             do_operation(var, func_name, x, y)
         else:
@@ -108,7 +111,6 @@ while True:
 
     else:
         value = chunck_command[1].strip()    
-
         if is_valid_number(value):
             variables[var] = float(value)
 
@@ -122,7 +124,7 @@ while True:
             print('variable error')
 
 
-        print('...........')
-        print(variables)
-        print('...........')
+#         print('...........')
+#         print(variables)
+#         print('...........')
 
