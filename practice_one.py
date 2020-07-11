@@ -61,12 +61,11 @@ def starts_with_number(var):
     return result
 
 while True:
-    command = input()
-
+    command = input().replace(' ','')
     if command == 'end':break
 
     chunck_command = command.split(':=')
-    var = chunck_command[0].strip()
+    var = chunck_command[0]
 
         # print if variale is called and is already defined
     if len(chunck_command) == 1:
@@ -75,8 +74,8 @@ while True:
         else:
             print('variable not found')
     
-    elif is_function(chunck_command[1].strip()):
-        function = chunck_command[1].strip()
+    elif is_function(chunck_command[1]):
+        function = chunck_command[1]
         func_name, x , y = get_function_values(function)        
         if func_name in functions:
             
@@ -110,7 +109,7 @@ while True:
 
 
     else:
-        value = chunck_command[1].strip()    
+        value = chunck_command[1]   
         if is_valid_number(value):
             variables[var] = float(value)
 
