@@ -1,30 +1,22 @@
-import re
-import pyperclip as clip
+# Create a Pandas Series that contains the distance of some planets from the Sun.
+# Use the name of the planets as the index to your Pandas Series, and the distance
+# from the Sun as your data. The distance from the Sun is in units of 10^6 km
+import pandas as pd
+import numpy as np
 
-result = re.compile(r'''(
- ((\d{3})|(\(\d{3}\)))? # first seperator
- (\s|-) # space or dash
- \d{3}  # 3 digit
- -       #seperator
- \d{4}       #last 4 digits
- (((ext(\.)?\s)|x)
- (\d{2,5}))?)      #extensions optional
-''', re.VERBOSE)
-email_re = re.compile(r'''
-[a-zA-Z0-9_.+]+ #sub domain
-@               # atsign
-[a-zA-Z0-9_.+]+ # extensio
-'''
-, re.VERBOSE)
-# name_re = r'\w*\s\w*'
-# number_re = re.compile(r'(\d{3}-\d{3}-\d{4})')
-# email_re = re.compile(r'\w*@\w*.\w*')
-# info_re = re.compile(r'\w*\w*, \d{3}-\d{3}-\d{4}, \w*@\w*.\w*')
-# results = info_re.findall(number_pattern, re.VERB
-total = result.findall(clip.paste())
-str = ''
-total_numbers = []
-for i in total:
-    total_numbers.append(i[0])
-str = '\n'.join(total_numbers)
-clip.copy(str)
+distance_from_sun = [149.6, 1433.5, 227.9, 108.2, 778.6]
+
+planets = ['Earth','Saturn', 'Mars','Venus', 'Jupiter']
+
+# Create a Pandas Series using the above data, with the name of the planets as
+# the index and the distance from the Sun as your data.
+dist_planets = pd.Series(index = planets, data = distance_from_sun)
+# Calculate the number of minutes it takes sunlight to reach each planet. You can
+# do this by dividing the distance from the Sun for each planet by the speed of light.
+# Since in the data above the distance from the Sun is in units of 10^6 km, you can
+# use a value for the speed of light of c = 18, since light travels 18 x 10^6 km/minute.
+time_light = dist_planets / 18
+
+# Use Boolean indexing to select only those planets for which sunlight takes less
+# than 40 minutes to reach them.
+close_planets = time_light[time_light < 40]
