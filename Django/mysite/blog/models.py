@@ -29,8 +29,8 @@ class Post(models.Model):
     body = models.TextField()
         
     publish = models.DateTimeField(default=timezone.now)
-    created = models.DateTimeField(auto_now_add=True)
-    updated = models.DateTimeField(auto_now=True)
+    created = models.DateTimeField(auto_now_add=True) # save current time when call post.save() and never change for later changes
+    updated = models.DateTimeField(auto_now=True) # save current time everytime call post.save()
         
     status = models.CharField(max_length=10,
                 choices=STATUS_CHOICES,
