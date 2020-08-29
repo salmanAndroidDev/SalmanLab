@@ -12,7 +12,7 @@ class PostAdmin(admin.ModelAdmin):
     list_display = ('title', 'slug', 'author', 'publish', 'status')
     list_filter = ('status', 'created', 'publish', 'author')
     search_fields = ('title', 'body')
-    prepopulated_fields = {'slug': ('title',)}
-    raw_id_fields = ('author',)
-    date_hierarchy = 'publish'
-    ordering = ('status', 'publish')
+    prepopulated_fields = {'slug': ('title',)} # prepopulates slug when title get filled
+    raw_id_fields = ('author',) # we can choose author by id
+    date_hierarchy = 'publish' # will be displayed in date hierarchy
+    ordering = ('status', 'publish') 
