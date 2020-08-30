@@ -1,5 +1,5 @@
 from django import forms
-form .models import Comment
+from .models import Comment
 
 
 class EmailPostForm(forms.Form):
@@ -16,3 +16,4 @@ class CommentForm(forms.ModelForm):
     class Meta:
         model = Comment
         fields = ('name', 'email', 'body')
+        # exclude = ('name', 'email', 'body') ---> You can exclude the list by uncommenting this
