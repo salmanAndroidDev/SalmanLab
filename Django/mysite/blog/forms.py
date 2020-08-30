@@ -1,4 +1,5 @@
 from django import forms
+form .models import Comment
 
 
 class EmailPostForm(forms.Form):
@@ -9,3 +10,9 @@ class EmailPostForm(forms.Form):
     # but we override widget to tell django to render this field as texteara
     # instead of default input
     comments = forms.CharField(widget=forms.Textarea, required=False)
+
+
+class CommentForm(forms.ModelForm):
+    class Meta:
+        model = Comment
+        fields = ('name', 'email', 'body')

@@ -1,9 +1,9 @@
 from django.shortcuts import render, get_object_or_404
-from .models import Post
+from .models import Post, Comment
 from django.core.paginator import Paginator, EmptyPage, \
     PageNotAnInteger
 from django.views.generic import ListView
-from .forms import EmailPostForm
+from .forms import EmailPostForm, CommentForm
 # Create your views here.
 from django.core.mail import send_mail
 
@@ -36,7 +36,38 @@ def post_detail(request, year, month, day, post):
                              publish__year=year,
                              publish__month=month,
                              publish__day=day)
-    return render(request, 'blog/post/detail.html', {'post': post})
+
+    comments = post.comments.filter(active=True)
+
+    new_comment = None
+
+    if request.method == 'POST':
+        comment_form = CommentForm(request.POST)
+        if comment_form.is_valid():
+            """
+                the save() method in the following line creates an instance of  the model
+                that the form is liked to and saves it to the database.
+                If you call it using commit= False, you create the model
+                instance but don't saveit to the databse yet.
+                This comes in handy when you want to modify the object before finally saving.            
+
+            """
+            new_comment = comment_form.save(commit=False)
+            # Assign the current post to the comment
+            new_comment.post = post
+            # We gotta remember to save Comment to the database not CommentForm()
+            # If we call CommentForm.save() first we instace Comment obj and initialized it with
+            # CommentForm values than save it to the database
+            new_comment.save()
+    else:
+        # send an empy form for the user to fill it
+        comment_form = CommentForm()
+    return render(request, 'blog/post/detail.html',
+                  {'post': post,
+                   'comments': comments,
+                   'new_comment': new_comment,
+                   'comment_form': comment_form
+                   })
 
 
 def post_share(request, post_id):
