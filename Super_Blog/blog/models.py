@@ -2,6 +2,7 @@ from django.db import models
 from django.contrib.auth.models import User
 from django.utils import timezone
 from django.urls import reverse
+from taggit.managers import TaggableManager
 
 
 class PublishedManager(models.Manager):
@@ -19,7 +20,7 @@ class Post(models.Model):
 
     objects = models.Manager()  # The default manager
     published = PublishedManager()  # Our customed manager
-
+    tags = TaggableManager()
     title = models.CharField(max_length=250)
 
     # simple slug field for SEO-Friendly url, we gonna add it to url
