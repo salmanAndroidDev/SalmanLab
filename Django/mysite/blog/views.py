@@ -59,7 +59,7 @@ def post_detail(request, year, month, day, post):
                 that the form is liked to and saves it to the database.
                 If you call it using commit= False, you create the model
                 instance but don't saveit to the databse yet.
-                This comes in handy when you want to modify the object before finally saving.            
+                This comes in handy when you want to modify the object before finally saving.
 
             """
             new_comment = comment_form.save(commit=False)
@@ -78,7 +78,8 @@ def post_detail(request, year, month, day, post):
         .exclude(id=post.id)
     similar_posts = similar_posts.annotate(same_tags=Count('tags'))\
         .order_by('-same_tags', '-publish')[:4]
-    print('***********************', post.tags.similar_objects())
+    print('***********************',
+          similar_posts.annotate(same_tags=Count('tags')))
     return render(request, 'blog/post/detail.html',
                   {'post': post,
                    'comments': comments,
@@ -106,7 +107,7 @@ def post_share(request, post_id):
                 post.get_absolute_url())  # by using reverse() method inside model we can get absolute path to create complete url
             subject = f"{cd['name']} recommends you read {post.title}"
             message = f"Read {post.title} at {post_url}\n\n"\
-                      f"{cd['name']}\'s comments: {cd['comments']}"
+                f"{cd['name']}\'s comments: {cd['comments']}"
             send_mail(subject, message, 'sbmlai25@gmail.com',
                       [cd['to']])
             sent = True

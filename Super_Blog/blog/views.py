@@ -2,6 +2,8 @@ from django.shortcuts import render, get_object_or_404
 from django.core.paginator import Paginator, EmptyPage, PageNotAnInteger
 from django.views.generic import ListView
 from .models import Post
+from .forms import ShareByEmailForm
+from django.core.mail import send_mail
 
 
 class PostListView(ListView):
@@ -46,3 +48,31 @@ def post_detail(request, day, month, year, post):
 
     template = 'blog/post/detail.html'
     return render(request, template, {'post': post})
+
+
+def post_share_by_email(request, post_id):
+    post = get_object_or_404(Post, id=post_id, status='published')
+
+    sent = False
+
+    if request.method == 'POST':
+        form = ShareByEmailForm(request.POST)
+
+        if form.is_valid():
+            cd = form.cleaned_data
+            to = cd['to']
+            post_url = request.build_absolute_uri(
+                post.get_absolute_url()
+            )
+
+            subject = f'{cd["name"]} recommends you to read {post.title}'
+            message = f'{cd["name"]} recommends you this post, and comments: {cd["comments"]}\n\n'\
+                      f'check url: {post_url}'
+
+            send_mail(subject, message, 'salman@deepclass.ir', [to])
+            sent = True
+    else:
+        form = ShareByEmailForm()
+    return render(request, 'blog/post/share_by_email.html', {'post': post,
+                                                             'form': form,
+                                                             'sent': sent})
