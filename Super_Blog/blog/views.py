@@ -1,8 +1,8 @@
 from django.shortcuts import render, get_object_or_404
 from django.core.paginator import Paginator, EmptyPage, PageNotAnInteger
 from django.views.generic import ListView
-from .models import Post
-from .forms import ShareByEmailForm
+from .models import Post, Comment
+from .forms import ShareByEmailForm, CommentForm
 from django.core.mail import send_mail
 
 
@@ -39,7 +39,6 @@ def post_detail(request, day, month, year, post):
     """ rendering post detail """
     # returns 404 response if there is no post with these info
     # we can get year,month, day from publish field by useing '__'
-
     post = get_object_or_404(Post, slug=post,
                              status='published',
                              publish__year=year,
@@ -47,7 +46,23 @@ def post_detail(request, day, month, year, post):
                              publish__day=day)
 
     template = 'blog/post/detail.html'
-    return render(request, template, {'post': post})
+
+    comments = post.comments.filter(active=True)
+    new_comment = None
+
+    if request.method == 'POST':
+        form = CommentForm(data=request.POST)
+        if form.is_valid():
+            new_comment = form.save(commit=False)
+            new_comment.post = post
+            new_comment.save()
+    else:
+        form = CommentForm()
+
+    return render(request, template, {'post': post,
+                                      'comments': comments,
+                                      'new_comment': new_comment,
+                                      'form': form})
 
 
 def post_share_by_email(request, post_id):
