@@ -17,7 +17,7 @@ class Post(models.Model):
                     ('draft', 'Draft'),
                     ('published', 'Published')
     )
-
+    
     objects = models.Manager()  # The default manager
     published = PublishedManager()  # Our customed manager
     tags = TaggableManager()
