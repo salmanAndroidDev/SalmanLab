@@ -103,9 +103,9 @@ def post_share(request, post_id):
             cd = form.cleaned_data
             post_url = request.build_absolute_uri(
                 post.get_absolute_url())  # by using reverse() method inside model we can get absolute path to create complete url
-            subject = f"{cd['name']} recommends you read {post.title}"
-            message = f"Read {post.title} at {post_url}\n\n"\
-                f"{cd['name']}\'s comments: {cd['comments']}"
+            subject = "{cd['name']} recommends you read {post.title}"
+            message = "Read {post.title} at {post_url}\n\n"\
+                "{cd['name']}\'s comments: {cd['comments']}"
             send_mail(subject, message, 'sbmlai25@gmail.com',
                       [cd['to']])
             sent = True
