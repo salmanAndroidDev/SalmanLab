@@ -17,3 +17,7 @@ class CommentForm(forms.ModelForm):
         model = Comment
         fields = ('name', 'email', 'body')
         # exclude = ('name', 'email', 'body') ---> You can exclude the list by uncommenting this
+
+
+class SearchForm(forms.Form):
+    query = forms.CharField()

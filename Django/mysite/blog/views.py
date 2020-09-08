@@ -1,9 +1,10 @@
+from django.contrib.postgres.search import SearchVector
 from django.shortcuts import render, get_object_or_404
 from .models import Post, Comment
 from django.core.paginator import Paginator, EmptyPage, \
     PageNotAnInteger
 from django.views.generic import ListView
-from .forms import EmailPostForm, CommentForm
+from .forms import EmailPostForm, CommentForm, SearchForm
 # Create your views here.
 from django.core.mail import send_mail
 from taggit.models import Tag
@@ -117,3 +118,22 @@ def post_share(request, post_id):
         form = EmailPostForm()  # make it empty to be filled in empty get form
     return render(request, 'blog/post/share.html',
                   {'post': post, 'form': form, 'sent': sent})
+
+
+def post_search(request):
+    form = SearchForm()
+    query = None
+    results = []
+    if 'query' in request.GET:  # if there is there query parameter inside request.GET dictionary
+        # NOTE: request.GET and request.POST are dictionaries
+        form = SearchForm(request.GET)
+        if form.is_valid():
+            query = form.cleaned_data['query']  # cleaned_data gives dictionary
+            results = Post.published.annotate(
+                search=SearchVector('title', 'body')
+            ).filter(search=query)
+    return render(request, 'blog/post/search.html',
+                  {'form': form,
+                   'query': query,
+                   'results': results
+                   })
