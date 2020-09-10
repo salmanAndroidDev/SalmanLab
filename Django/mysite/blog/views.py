@@ -1,14 +1,16 @@
-from django.contrib.postgres.search import SearchVector
-from django.shortcuts import render, get_object_or_404
-from .models import Post, Comment
+from django.db.models import Count
+from taggit.models import Tag
+from django.core.mail import send_mail
+from .forms import EmailPostForm, CommentForm, SearchForm
+from django.views.generic import ListView
 from django.core.paginator import Paginator, EmptyPage, \
     PageNotAnInteger
-from django.views.generic import ListView
-from .forms import EmailPostForm, CommentForm, SearchForm
+from .models import Post, Comment
+from django.shortcuts import render, get_object_or_404
+from django.contrib.postgres.search import SearchVector, SearchQuery, \
+    SearchRank, TrigramSimilarity
+
 # Create your views here.
-from django.core.mail import send_mail
-from taggit.models import Tag
-from django.db.models import Count
 
 
 class PostListView(ListView):
@@ -111,7 +113,7 @@ def post_share(request, post_id):
                       [cd['to']])
             sent = True
         else:  # form is not valid
-            print('****************************************************************test*****************', form.errors)
+            print('*************************test*****************', form.errors)
 
     else:
         # request was get
@@ -129,9 +131,13 @@ def post_search(request):
         form = SearchForm(request.GET)
         if form.is_valid():
             query = form.cleaned_data['query']  # cleaned_data gives dictionary
+
+            search_vector = SearchVector('title', weight='A') + \
+                SearchVector('body', weight='B')
+            search_query = SearchQuery(query)
             results = Post.published.annotate(
-                search=SearchVector('title', 'body')
-            ).filter(search=query)
+                similarity=TrigramSimilarity('title', query),
+            ).filter(similarity__gt=0.1).order_by('-similarity')
     return render(request, 'blog/post/search.html',
                   {'form': form,
                    'query': query,

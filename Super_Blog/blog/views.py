@@ -94,9 +94,9 @@ def post_share_by_email(request, post_id):
                 post.get_absolute_url()
             )
 
-            subject = f'{cd["name"]} recommends you to read {post.title}'
-            message = f'{cd["name"]} recommends you this post, and comments: {cd["comments"]}\n\n'\
-                      f'check url: {post_url}'
+            subject = '{cd["name"]} recommends you to read {post.title}'
+            message = '{cd["name"]} recommends you this post, and comments: {cd["comments"]}\n\n'\
+                      'check url: {post_url}'
 
             send_mail(subject, message, 'salman@deepclass.ir', [to])
             sent = True

@@ -17,7 +17,7 @@ class Post(models.Model):
                     ('draft', 'Draft'),
                     ('published', 'Published')
     )
-    
+
     objects = models.Manager()  # The default manager
     published = PublishedManager()  # Our customed manager
     tags = TaggableManager()
@@ -70,4 +70,4 @@ class Comment(models.Model):
         ordering = ('created',)
 
     def __str__(self):
-        return f"{self.name} comment on {self.post}"
+        return "{self.name} comment on {self.post}"
