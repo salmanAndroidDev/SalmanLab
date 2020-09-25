@@ -1,0 +1,4 @@
+django==2.2.16
+psycopg2-binary==2.8.4
+django_taggit==1.2.0
+markdown==3.2.1
